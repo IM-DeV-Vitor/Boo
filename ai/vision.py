@@ -5,6 +5,7 @@ from config import HF_TOKEN
 import base64
 import io
 import urllib.request
+import asyncio
 
 from PIL import Image
 
@@ -17,8 +18,8 @@ class Vision:
         )
 
     async def describe_image(self, image_url):
-
-        response = self.client.chat_completion(
+        response = await asyncio.to_thread(
+            self.client.chat_completion,
             model="Qwen/Qwen3-VL-30B-A3B-Instruct",
             messages=[
                 {
@@ -26,10 +27,7 @@ class Vision:
                     "content": [
                         {
                             "type": "text",
-                            "text": (
-                                "descreva o que está acontecendo nessa imagem "
-                                "de forma simples e objetiva."
-                            )
+                            "text": "descreva o que está acontecendo nessa imagem de forma simples e objetiva."
                         },
                         {
                             "type": "image_url",
