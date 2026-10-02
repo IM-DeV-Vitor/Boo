@@ -29,7 +29,7 @@ class Brain:
              })
 
         response = self.client.chat_completion(
-        model="openai/gpt-oss-120b",
+        model="openai/gpt-oss-20b",
         messages=messages,
         max_tokens=500
         )  
