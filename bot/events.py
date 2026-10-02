@@ -1,7 +1,6 @@
 from .client import bot
 from memory.context import add_message, get_context
 from ai.brain import brain
-from ai.vision import vision
 from behavior.participation import should_participate
 from behavior.moderation import is_offense
 from datetime import timedelta
@@ -16,25 +15,6 @@ async def on_message(message):
         return
 
     content = message.content
-
-    image_description = None
-
-    for attachment in message.attachments:
-
-        content_type = attachment.content_type or ""
-        filename = attachment.filename.lower()
-
-        if content_type == "image/gif" or filename.endswith(".gif"):
-            image_description = await vision.describe_gif(
-                attachment.url
-            )
-            break
-
-        elif content_type.startswith("image/"):
-            image_description = await vision.describe_image(
-                attachment.url
-            )
-            break
 
     add_message(
         message.channel.id,
