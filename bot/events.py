@@ -1,6 +1,7 @@
 from .client import bot
 from memory.context import add_message, get_context
 from ai.brain import brain
+from ai.vision import vision
 from behavior.participation import should_participate
 from behavior.moderation import is_offense
 from datetime import timedelta
@@ -9,27 +10,46 @@ from datetime import timedelta
 async def on_ready():
     print(f"Bot conectado como {bot.user}")
 
-@bot.event 
+@bot.event
 async def on_message(message):
     if message.author.bot:
         return
 
+    content = message.content
+
+    image_description = None
+
+    for attachment in message.attachments:
+        if attachment.content_type and attachment.content_type.startswith("image/"):
+            image_description = await vision.describe_image(attachment.url)
+            break
+
+    if image_description:
+        content += f"\n[Imagem enviada: {image_description}]"
+
     add_message(
         message.channel.id,
         str(message.author),
-        message.content,
+        content,
         is_bot=False
     )
 
     if is_offense(message, bot.user):
-        await message.author.timeout(timedelta(minutes=1), reason="Voce ofendeu a boo!")
-        await message.channel.send(f"{message.author.mention} seu babaca!")
+        await message.author.timeout(
+            timedelta(minutes=1),
+            reason="Voce ofendeu a boo!"
+        )
+
+        await message.channel.send(
+            f"{message.author.mention} seu babaca!"
+        )
         return
 
     context = get_context(message.channel.id)
+    
     if not should_participate(message, context, bot.user):
         return
-    
+
     response = await brain.generate_response(context)
 
     await message.channel.send(response)

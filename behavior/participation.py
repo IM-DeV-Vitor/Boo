@@ -13,4 +13,4 @@ def should_participate(message, context, bot_user):
     if len(context) < 2:
         return False
 
-    return random.random() < 0.12
+    return random.random() < 0.08
