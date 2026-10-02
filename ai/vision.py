@@ -19,27 +19,27 @@ class Vision:
 
     async def describe_image(self, image_url):
         response = await asyncio.to_thread(
-            self.client.chat_completion,
-            model="Qwen/Qwen3-VL-30B-A3B-Instruct",
-            messages=[
-                {
-                    "role": "user",
-                    "content": [
-                        {
-                            "type": "text",
-                            "text": "descreva o que está acontecendo nessa imagem de forma simples e objetiva."
-                        },
-                        {
-                            "type": "image_url",
-                            "image_url": {
-                                "url": image_url
-                            }
+        self.client.chat_completion,
+        model="Qwen/Qwen3-VL-30B-A3B-Instruct",
+        messages=[
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "descreva o que está acontecendo nessa imagem em uma frase curta."
+                    },
+                    {
+                        "type": "image_url",
+                        "image_url": {
+                            "url": image_url
                         }
-                    ]
-                }
-            ],
-            max_tokens=300
-        )
+                    }
+                ]
+            }
+        ],
+        max_tokens=80
+    )
 
         return response.choices[0].message.content
 
