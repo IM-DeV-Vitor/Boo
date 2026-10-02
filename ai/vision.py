@@ -102,7 +102,7 @@ class Vision:
             })
 
         response = self.client.chat_completion(
-            model="Qwen/Qwen2.5-VL-7B-Instruct",
+            model="Qwen/Qwen2.5-VL-3B-Instruct",
             messages=[
                 {
                     "role": "user",
