@@ -20,12 +20,21 @@ async def on_message(message):
     image_description = None
 
     for attachment in message.attachments:
-        if attachment.content_type and attachment.content_type.startswith("image/"):
-            image_description = await vision.describe_image(attachment.url)
+
+        content_type = attachment.content_type or ""
+        filename = attachment.filename.lower()
+
+        if content_type == "image/gif" or filename.endswith(".gif"):
+            image_description = await vision.describe_gif(
+                attachment.url
+            )
             break
 
-    if image_description:
-        content += f"\n[Imagem enviada: {image_description}]"
+        elif content_type.startswith("image/"):
+            image_description = await vision.describe_image(
+                attachment.url
+            )
+            break
 
     add_message(
         message.channel.id,
@@ -46,7 +55,7 @@ async def on_message(message):
         return
 
     context = get_context(message.channel.id)
-    
+
     if not should_participate(message, context, bot.user):
         return
 
