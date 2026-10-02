@@ -19,7 +19,7 @@ class Vision:
     async def describe_image(self, image_url):
 
         response = self.client.chat_completion(
-            model="Qwen/Qwen3-VL-2B-Instruct",
+            model="Qwen/Qwen3-VL-30B-A3B-Instruct",
             messages=[
                 {
                     "role": "user",
